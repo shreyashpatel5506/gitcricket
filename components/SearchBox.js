@@ -86,7 +86,7 @@ export default function SearchBox() {
 
     setIsOpen(false);
     // Redirect to card page
-    router.push(`/card/${encodeURIComponent(target.toLowerCase())}`);
+    router.push(`/${encodeURIComponent(target.toLowerCase())}`);
   };
 
   // Keyboard navigation inside suggestions list

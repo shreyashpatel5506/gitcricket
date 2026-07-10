@@ -92,7 +92,7 @@ export default function DashboardContent({ profile, ownCard, savedCards, searchH
                 </h3>
                 
                 {ownCard ? (
-                  <Link href={`/card/${profile.github_username}`} className="hover:scale-[1.01] transition-transform duration-300">
+                  <Link href={`/${profile.github_username}`} className="hover:scale-[1.01] transition-transform duration-300">
                     <PlayerCard profile={profile} card={ownCard} />
                   </Link>
                 ) : (
@@ -103,7 +103,7 @@ export default function DashboardContent({ profile, ownCard, savedCards, searchH
                       <p className="text-xs text-text-tertiary">Scrape your credentials to deploy your custom player card!</p>
                     </div>
                     <Link
-                      href={`/card/${profile.github_username}`}
+                      href={`/${profile.github_username}`}
                       className="inline-flex h-9 items-center justify-center rounded-lg bg-green-core px-5 text-xs font-bold text-bg-void hover:bg-green-core/90 transition-all"
                     >
                       Generate My Card
@@ -134,7 +134,7 @@ export default function DashboardContent({ profile, ownCard, savedCards, searchH
                       return (
                         <Link 
                           key={bookmark.id}
-                          href={`/card/${cache.github_username}`}
+                          href={`/${cache.github_username}`}
                           className="glass-panel p-4 rounded-xl flex items-center justify-between hover:bg-bg-surface-2 transition-all group"
                         >
                           <div className="flex items-center gap-3">
@@ -188,7 +188,7 @@ export default function DashboardContent({ profile, ownCard, savedCards, searchH
                     {searchHistory.map((log) => (
                       <Link 
                         key={log.id} 
-                        href={`/card/${log.github_username}`}
+                        href={`/${log.github_username}`}
                         className="flex items-center justify-between px-5 py-3 hover:bg-bg-surface-2 transition-colors group"
                       >
                         <span className="text-sm font-semibold text-text-secondary group-hover:text-text-primary">

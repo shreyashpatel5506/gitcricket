@@ -1,3 +1,4 @@
+import Script from 'next/script'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -34,6 +35,14 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
+      <head>
+              <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4055022098367074"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        </head>
       <body className="bg-bg-void text-text-primary min-h-full flex flex-col antialiased">
         {children}
       </body>

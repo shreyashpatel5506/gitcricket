@@ -36,6 +36,7 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
       <head>
+      <meta name="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1" content="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1" />
               <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4055022098367074"

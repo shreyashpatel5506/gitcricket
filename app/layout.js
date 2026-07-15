@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
     name="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1"
     content="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1"
   />
-
+<meta name="referrer" content="no-referrer-when-downgrade" />
   <Script id="hilltopads" strategy="afterInteractive">
     {`
       (function(owmnl){

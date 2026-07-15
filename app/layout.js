@@ -1,3 +1,4 @@
+import Script from 'next/script'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 

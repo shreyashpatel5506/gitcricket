@@ -35,15 +35,27 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
     >
-      <head>
-      <meta name="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1" content="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1" />
-              <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4055022098367074"
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
-        </head>
+    <head>
+  <meta
+    name="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1"
+    content="c2fda82fdea5dcfd0da917126c88c22bad6c9bc1"
+  />
+
+  <Script id="hilltopads" strategy="afterInteractive">
+    {`
+      (function(owmnl){
+        var d = document,
+            s = d.createElement('script'),
+            l = d.scripts[d.scripts.length - 1];
+        s.settings = owmnl || {};
+        s.src = "//nautical-hand.com/c_Dg9.6lbs2_5GlOSgWgQt9QNszSI/ysNkTzk-yPOESp0w3nMojQI/1AOyT/M/zJ";
+        s.async = true;
+        s.referrerPolicy = "no-referrer-when-downgrade";
+        l.parentNode.insertBefore(s, l);
+      })({});
+    `}
+  </Script>
+</head>
       <body className="bg-bg-void text-text-primary min-h-full flex flex-col antialiased">
         {children}
       </body>

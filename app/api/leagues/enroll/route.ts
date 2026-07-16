@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
     // 2. Validate input parameters
     const { leagueId, teamId, role } = await request.json();
 
-    if (!leagueId || !teamId || !role) {
-      return NextResponse.json({ success: false, error: 'Missing required parameters: leagueId, teamId, or role' }, { status: 400 });
+    if (!leagueId || !role) {
+      return NextResponse.json({ success: false, error: 'Missing required parameters: leagueId or role' }, { status: 400 });
     }
 
     const validRoles = ['batsman', 'bowler', 'all-rounder', 'wicket-keeper', 'captain'];
@@ -44,7 +44,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Enrollment failed: No active season found for this league.' }, { status: 400 });
     }
 
-    // 4. Verify user is not already enrolled in this season
+    // 4. Verify whether the league has teams defined
+    const { data: leagueTeams } = await supabase
+      .from('teams')
+      .select('id')
+      .eq('league_id', leagueId);
+
+    const hasTeams = leagueTeams && leagueTeams.length > 0;
+
+    if (hasTeams && !teamId) {
+      return NextResponse.json({ success: false, error: 'Missing team selection. This league requires choosing a franchise.' }, { status: 400 });
+    }
+
+    const finalTeamId = hasTeams ? teamId : null;
+
+    // 5. Verify user is not already enrolled in this season
     const { data: existingEnrollment } = await supabase
       .from('league_enrollments')
       .select('id')
@@ -56,14 +70,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'You are already enrolled in this league for the active season.' }, { status: 409 });
     }
 
-    // 5. Insert enrollment mapping in database
+    // 6. Insert enrollment mapping in database
     const { data: enrollment, error: insertError } = await supabase
       .from('league_enrollments')
       .insert({
         user_id: user.id,
         league_id: leagueId,
         season_id: activeSeason.id,
-        team_id: teamId,
+        team_id: finalTeamId,
         role: normalizedRole
       })
       .select()
@@ -74,7 +88,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: `Database insert failed: ${insertError.message}` }, { status: 500 });
     }
 
-    // 6. Update user's generated default card to associate with the team and active season
+    // 7. Update user's generated default card to associate with the team and active season
     const { data: profile } = await supabase
       .from('profiles')
       .select('github_username')
@@ -93,7 +107,7 @@ export async function POST(request: NextRequest) {
           .from('generated_cards')
           .update({
             season_id: activeSeason.id,
-            team_id: teamId
+            team_id: finalTeamId
           })
           .eq('github_profile_id', cacheProfile.id)
           .eq('theme', 'dark');

@@ -235,6 +235,54 @@ export default async function Page({ params }) {
     console.warn('Failed to calculate country rank on server:', rankErr.message);
   }
 
+  // 5. Query active league enrollment for the public profile being viewed
+  let activeEnrollment = null;
+  let leagueRank = null;
+
+  try {
+    const { data: profileUser } = await supabase
+      .from('profiles')
+      .select('id')
+      .ilike('github_username', username)
+      .maybeSingle();
+
+    if (profileUser) {
+      const { data: enrollment } = await supabase
+        .from('league_enrollments')
+        .select(`
+          role,
+          season_id,
+          league_id,
+          leagues (name, code),
+          teams (name, short_name)
+        `)
+        .eq('user_id', profileUser.id)
+        .maybeSingle();
+
+      if (enrollment && card) {
+        activeEnrollment = {
+          role: enrollment.role,
+          leagueName: enrollment.leagues?.name || '',
+          leagueCode: enrollment.leagues?.code || '',
+          teamName: enrollment.teams?.name || 'Country Representative',
+          teamShort: enrollment.teams?.short_name || null
+        };
+
+        // Query the rank of the player card within this season
+        const { data: countData } = await supabase
+          .from('generated_cards')
+          .select('id')
+          .eq('season_id', enrollment.season_id)
+          .eq('theme', 'dark')
+          .gt('overall', card.overall);
+
+        leagueRank = (countData?.length || 0) + 1;
+      }
+    }
+  } catch (enrollErr) {
+    console.warn('Failed to fetch league enrollment for profile card:', enrollErr.message);
+  }
+
   const profileWithRank = {
     ...profile,
     country: profile.country || 'India',
@@ -242,7 +290,12 @@ export default async function Page({ params }) {
   };
 
   return (
-    <CardShowcase profile={profileWithRank} card={card} />
+    <CardShowcase 
+      profile={profileWithRank} 
+      card={card} 
+      activeEnrollment={activeEnrollment}
+      leagueRank={leagueRank}
+    />
   );
 }
 

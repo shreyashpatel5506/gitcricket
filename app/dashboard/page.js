@@ -51,13 +51,30 @@ export default async function Page() {
       .limit(8)
   ]);
 
-  const profile = profileResult.data;
+  let profile = profileResult.data;
   const savedCards = bookmarksResult.data || [];
   const searchHistory = historyResult.data || [];
 
   if (!profile) {
-    // Session is active but database trigger hasn't finished writing profile, redirect to home
-    redirect('/');
+    // Auto-upsert profile using user metadata as backup to prevent redirection loop lockouts
+    const { data: upsertedProfile, error: upsertError } = await supabase
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        github_username: user.user_metadata?.user_name || user.user_metadata?.preferred_username || null,
+        full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
+        avatar_url: user.user_metadata?.avatar_url || null,
+        email: user.email || null,
+        updated_at: new Date().toISOString()
+      })
+      .select('*')
+      .single();
+
+    if (upsertError || !upsertedProfile) {
+      console.error('[Dashboard] Dynamic profile fallback upsert failed:', upsertError?.message);
+      redirect('/');
+    }
+    profile = upsertedProfile;
   }
 
   // 3. Fetch user's own card if it exists

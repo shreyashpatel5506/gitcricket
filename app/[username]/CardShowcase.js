@@ -50,7 +50,7 @@ function getRecalculatedRatings(baseCard, mode) {
   return baseCard;
 }
 
-export default function CardShowcase({ profile, card }) {
+export default function CardShowcase({ profile, card, activeEnrollment = null, leagueRank = null }) {
   const cardRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
@@ -274,6 +274,52 @@ export default function CardShowcase({ profile, card }) {
                   {profile.bio || "This developer hasn't set a GitHub bio yet, but their metrics do the talking on the field."}
                 </p>
               </div>
+
+              {/* Active League Enrollment Badge */}
+              {activeEnrollment ? (
+                <div className="flex flex-col gap-2.5 p-4.5 rounded-2xl bg-green-glow border border-green-core/20 text-left">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Trophy className="w-4.5 h-4.5 text-green-core" />
+                      <span className="text-[10px] font-black uppercase tracking-wider text-green-core">Active Tournament Pro</span>
+                    </div>
+                    {leagueRank && (
+                      <span className="text-xs font-black text-text-primary">
+                        Rank #{leagueRank}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between mt-1 text-xs">
+                    <div className="flex flex-col">
+                      <span className="font-extrabold text-text-primary uppercase tracking-wide">
+                        {activeEnrollment.leagueName}
+                      </span>
+                      <span className="text-[10px] text-text-secondary mt-0.5">
+                        Team: {activeEnrollment.teamShort || activeEnrollment.teamName} • Role: <span className="uppercase font-bold text-green-core">{activeEnrollment.role}</span>
+                      </span>
+                    </div>
+                    <Link 
+                      href={`/leagues/${activeEnrollment.leagueCode}`}
+                      className="px-3.5 py-1.5 bg-green-core hover:bg-green-core/90 text-[10px] font-black text-bg-void rounded-lg transition-colors cursor-pointer"
+                    >
+                      Dashboard
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-4.5 rounded-2xl bg-bg-surface-2 border border-border-hairline text-left text-xs">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-text-primary">Not Enrolled in Leagues</span>
+                    <span className="text-[10px] text-text-tertiary mt-0.5">This player is a free agent and hasn't registered for any active season.</span>
+                  </div>
+                  <Link 
+                    href="/leagues"
+                    className="px-4 py-2 bg-bg-surface-1 border border-border-hairline hover:bg-bg-surface-2 font-black rounded-xl text-[10px] text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+                  >
+                    Join League
+                  </Link>
+                </div>
+              )}
 
               {/* Match Mode Tabs Selector */}
               <div className="flex flex-col gap-2 glass-panel p-4 rounded-xl border border-border-hairline text-left">

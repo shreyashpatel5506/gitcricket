@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
   />
   
 <meta name="referrer" content="no-referrer-when-downgrade" />
-  <Script id="hilltopads" strategy="afterInteractive">
+  {/* <Script id="hilltopads" strategy="afterInteractive">
     {`
     (function(jbm){
 var d = document,
@@ -67,7 +67,7 @@ s.async = true;
 s.referrerPolicy = 'no-referrer-when-downgrade';
 l.parentNode.insertBefore(s, l);
 })({})`}
-</Script>
+</Script> */}
 </head>
       <body className="bg-bg-void text-text-primary min-h-full flex flex-col antialiased">
         {children}

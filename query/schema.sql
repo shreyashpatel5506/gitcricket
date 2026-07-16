@@ -129,3 +129,19 @@ CREATE POLICY "Users can manage their own search history" ON public.user_search_
 -- 5. Indexes for Performance Optimization
 CREATE INDEX IF NOT EXISTS idx_github_profile_cache_username ON public.github_profile_cache (github_username);
 CREATE INDEX IF NOT EXISTS idx_generated_cards_profile_id ON public.generated_cards (github_profile_id);
+
+-- 6. Seed Achievements Definitions
+INSERT INTO public.achievements (title, description, metric_field, threshold) VALUES
+('Century Maker', 'Scraped profile has reached 100+ contributions', 'contribution_count', 100),
+('Double Century Maker', 'Scraped profile has reached 200+ contributions', 'contribution_count', 200),
+('Streak Starter', 'Active contribution streak reached 5+ days', 'current_streak', 5),
+('Streak Legend', 'Longest contribution streak reached 30+ days', 'longest_streak', 30),
+('Star Attraction', 'Scraped repositories have earned 15+ stars total', 'total_stars', 15)
+ON CONFLICT (title) DO NOTHING;
+
+-- 7. Seed Badges Definitions
+INSERT INTO public.badges (name, description, icon_svg, criteria_json) VALUES
+('JS Captain', 'Primary language is JavaScript', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', '{"primary_language": "JavaScript"}'::jsonb),
+('Python Pro', 'Primary language is Python', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', '{"primary_language": "Python"}'::jsonb),
+('Rust Ace', 'Primary language is Rust', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', '{"primary_language": "Rust"}'::jsonb)
+ON CONFLICT (name) DO NOTHING;

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Sparkles, Trophy, User, LogOut } from 'lucide-react';
+import { Sparkles, Trophy, User, LogOut, Star } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Navbar() {
@@ -76,6 +76,16 @@ export default function Navbar() {
 
         {/* Right: Auth Action Buttons */}
         <div className="flex items-center gap-3">
+          <a
+            href="https://github.com/shreyashpatel5506/gitcricket"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-lg border border-border-hairline px-3 py-1.5 text-xs font-bold text-text-secondary hover:text-[#F4D06F] hover:border-[#F4D06F]/40 hover:bg-bg-surface-2 transition-all active:scale-95 cursor-pointer"
+          >
+            <Star className="w-3.5 h-3.5 fill-[#F4D06F]/20 text-[#F4D06F]" />
+            <span className="hidden sm:inline">Star on GitHub</span>
+          </a>
+
           {user ? (
             <div className="flex items-center gap-3">
               {/* Profile Avatar / Locker Link */}

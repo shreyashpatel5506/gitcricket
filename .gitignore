@@ -9,7 +9,10 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+/query
+.agent
 
+.claude.md
 # testing
 /coverage
 

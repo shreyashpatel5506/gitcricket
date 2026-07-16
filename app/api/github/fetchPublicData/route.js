@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase/connect';
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { fetchGitHubUserData } from '@/services/github';
 import { transformGitHubData } from '@/features/scanner/utils/transformer';
+import { syncGamification } from '@/services/gamification';
 
 // Cache expiry duration in milliseconds: 24 Hours
 const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000;
@@ -154,6 +155,11 @@ export async function GET(request) {
           avatar_url: profileCache.avatar_url,
           bio: profileCache.bio,
           country: profileCache.country,
+          city: profileCache.city,
+          state: profileCache.state,
+          company: profileCache.company,
+          college: profileCache.college,
+          primary_language: profileCache.primary_language,
           followers: profileCache.followers,
           following: profileCache.following,
           public_repos: profileCache.public_repos,
@@ -183,6 +189,11 @@ export async function GET(request) {
           avatar_url: profileCache.avatar_url,
           bio: profileCache.bio,
           country: profileCache.country,
+          city: profileCache.city,
+          state: profileCache.state,
+          company: profileCache.company,
+          college: profileCache.college,
+          primary_language: profileCache.primary_language,
           followers: profileCache.followers,
           following: profileCache.following,
           public_repos: profileCache.public_repos,
@@ -207,7 +218,14 @@ export async function GET(request) {
       profileCacheId = insertedProfile.id;
     }
 
-    // 6. Database Transaction: Update or Insert generated default card
+    // 6. Gamification: Evaluate and synchronize achievements & badges
+    try {
+      await syncGamification(supabase, profileCacheId, profileCache);
+    } catch (gamificationErr) {
+      console.warn('[Server] Gamification sync failed:', gamificationErr.message);
+    }
+
+    // 7. Database Transaction: Update or Insert generated default card
     const { data: existingCard, error: existingCardError } = await supabase
       .from('generated_cards')
       .select('*')

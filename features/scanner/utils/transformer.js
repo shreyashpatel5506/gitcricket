@@ -119,6 +119,54 @@ function extractCountry(location) {
 }
 
 /**
+ * Parses city and state from GitHub's location field.
+ * Example: "Mumbai, Maharashtra, India" -> { city: "Mumbai", state: "Maharashtra" }
+ * Example: "San Francisco, CA" -> { city: "San Francisco", state: "CA" }
+ */
+function parseCityAndState(location) {
+  if (!location) return { city: null, state: null };
+  const parts = location.split(',').map(p => p.trim());
+  
+  let city = null;
+  let state = null;
+  
+  if (parts.length > 0) {
+    city = parts[0];
+  }
+  if (parts.length > 1) {
+    state = parts[1];
+  }
+  
+  return { city, state };
+}
+
+/**
+ * Classifies the company field into either a corporate company or a university/college.
+ * If the string contains keywords like 'university', 'college', 'iit', 'school', etc.,
+ * it classifies as a college. Otherwise, it cleans standard @ symbols and maps it as a company.
+ */
+function parseCompanyAndCollege(company) {
+  if (!company) return { company: null, college: null };
+  
+  const cleanName = company.trim().replace(/^@/, '');
+  const lower = cleanName.toLowerCase();
+  
+  const collegeKeywords = [
+    'university', 'college', 'institute', 'school', 'iit', 'mit', 
+    'iiit', 'bits', 'harvard', 'stanford', 'oxford', 'cambridge', 
+    'polytechnic', 'acad', 'tech'
+  ];
+  
+  const isCollege = collegeKeywords.some(keyword => lower.includes(keyword));
+  
+  if (isCollege) {
+    return { company: null, college: cleanName };
+  }
+  
+  return { company: cleanName, college: null };
+}
+
+/**
  * Transforms raw GitHub user data from GraphQL into structured profile cache and card ratings.
  */
 export function transformGitHubData(user) {
@@ -190,6 +238,10 @@ export function transformGitHubData(user) {
     playerRole
   );
 
+  const { city, state } = parseCityAndState(user.location);
+  const { company, college } = parseCompanyAndCollege(user.company);
+  const primaryLang = sortedLanguages[0] || null;
+
   // Prepare profile cache schema
   const profileCache = {
     github_username: user.login,
@@ -198,6 +250,11 @@ export function transformGitHubData(user) {
     avatar_url: user.avatarUrl,
     bio: user.bio || '',
     country: extractCountry(user.location),
+    city,
+    state,
+    company,
+    college,
+    primary_language: primaryLang,
     followers: user.followers?.totalCount || 0,
     following: user.following?.totalCount || 0,
     public_repos: user.repositories?.totalCount || 0,

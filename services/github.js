@@ -19,6 +19,7 @@ export async function fetchGitHubUserData(username, oauthToken = null) {
         avatarUrl
         bio
         location
+        company
         createdAt
         followers {
           totalCount

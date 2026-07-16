@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase/connect';
 import { fetchGitHubUserData } from '@/services/github';
 import { transformGitHubData } from '@/features/scanner/utils/transformer';
+import { syncGamification } from '@/services/gamification';
 import CardShowcase from './CardShowcase';
 
 export const revalidate = 0; // Disable path generation caching to allow fresh scans
@@ -76,6 +77,12 @@ export default async function Page({ params }) {
             name: transformed.profileCache.name,
             avatar_url: transformed.profileCache.avatar_url,
             bio: transformed.profileCache.bio,
+            country: transformed.profileCache.country,
+            city: transformed.profileCache.city,
+            state: transformed.profileCache.state,
+            company: transformed.profileCache.company,
+            college: transformed.profileCache.college,
+            primary_language: transformed.profileCache.primary_language,
             followers: transformed.profileCache.followers,
             following: transformed.profileCache.following,
             public_repos: transformed.profileCache.public_repos,
@@ -103,6 +110,12 @@ export default async function Page({ params }) {
             name: transformed.profileCache.name,
             avatar_url: transformed.profileCache.avatar_url,
             bio: transformed.profileCache.bio,
+            country: transformed.profileCache.country,
+            city: transformed.profileCache.city,
+            state: transformed.profileCache.state,
+            company: transformed.profileCache.company,
+            college: transformed.profileCache.college,
+            primary_language: transformed.profileCache.primary_language,
             followers: transformed.profileCache.followers,
             following: transformed.profileCache.following,
             public_repos: transformed.profileCache.public_repos,
@@ -121,6 +134,13 @@ export default async function Page({ params }) {
         if (insertError) throw new Error(insertError.message);
         profileCacheId = insertedProfile.id;
         profile = { id: profileCacheId, ...transformed.profileCache };
+      }
+
+      // Sync achievements & badges
+      try {
+        await syncGamification(supabase, profileCacheId, transformed.profileCache);
+      } catch (gamificationErr) {
+        console.warn('[Server] Gamification sync failed:', gamificationErr.message);
       }
 
       // 3. Upsert default card configuration

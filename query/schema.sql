@@ -29,22 +29,38 @@ INSERT INTO public.themes (id, name, description, is_premium) VALUES
 ('light', 'Away Kit', 'Clean, modern white and blue stadium theme', false)
 ON CONFLICT (id) DO NOTHING;
 
--- 2. Create User Profiles Sync Trigger Function
+-- 2. Create Profiles Table (if not exists)
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    github_username TEXT,
+    full_name TEXT,
+    email TEXT,
+    avatar_url TEXT,
+    provider TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Create User Profiles Sync Trigger Function
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, github_username, full_name, avatar_url)
+    INSERT INTO public.profiles (id, github_username, full_name, email, avatar_url, provider)
     VALUES (
         new.id,
         new.raw_user_meta_data->>'user_name',
         new.raw_user_meta_data->>'full_name',
-        new.raw_user_meta_data->>'avatar_url'
+        new.email,
+        new.raw_user_meta_data->>'avatar_url',
+        new.raw_app_meta_data->>'provider'
     )
     ON CONFLICT (id) DO UPDATE
     SET
         github_username = EXCLUDED.github_username,
         full_name = EXCLUDED.full_name,
+        email = EXCLUDED.email,
         avatar_url = EXCLUDED.avatar_url,
+        provider = EXCLUDED.provider,
         updated_at = NOW();
     RETURN NEW;
 END;
@@ -55,7 +71,7 @@ CREATE OR REPLACE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- 3. Enable Row-Level Security (RLS) on all tables
+-- 4. Enable Row-Level Security (RLS) on all tables
 ALTER TABLE public.themes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.github_accounts ENABLE ROW LEVEL SECURITY;
@@ -64,17 +80,25 @@ ALTER TABLE public.user_saved_cards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.github_profile_cache ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.generated_cards ENABLE ROW LEVEL SECURITY;
 
--- 4. Set RLS Policies
+-- 5. Set RLS Policies
 -- Themes Policies
 CREATE POLICY "Themes are viewable by everyone" ON public.themes
     FOR SELECT USING (true);
 
 -- Profiles Policies
-CREATE POLICY "Profiles are viewable by everyone" ON public.profiles
-    FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Profiles are viewable by everyone" ON public.profiles;
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Users can read their own profile" ON public.profiles;
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.profiles;
+
+CREATE POLICY "Users can read their own profile" ON public.profiles
+    FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert their own profile" ON public.profiles
+    FOR INSERT WITH CHECK (auth.uid() = id);
 
 CREATE POLICY "Users can update their own profile" ON public.profiles
-    FOR UPDATE USING (auth.uid() = id);
+    FOR UPDATE USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
 
 -- Cache Policies
 CREATE POLICY "Cached profiles are viewable by everyone" ON public.github_profile_cache

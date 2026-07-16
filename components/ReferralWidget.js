@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Gift, X, Server, Cloud, Cpu, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 export default function ReferralWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [isHidden, setIsHidden] = useState(true); // Default true for server-side render safety
 
   useEffect(() => {

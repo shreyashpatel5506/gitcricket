@@ -145,3 +145,61 @@ INSERT INTO public.badges (name, description, icon_svg, criteria_json) VALUES
 ('Python Pro', 'Primary language is Python', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', '{"primary_language": "Python"}'::jsonb),
 ('Rust Ace', 'Primary language is Rust', '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', '{"primary_language": "Rust"}'::jsonb)
 ON CONFLICT (name) DO NOTHING;
+
+-- 8. Create league_enrollments table
+CREATE TABLE IF NOT EXISTS public.league_enrollments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    league_id UUID NOT NULL REFERENCES public.leagues(id) ON DELETE CASCADE,
+    season_id UUID NOT NULL REFERENCES public.seasons(id) ON DELETE CASCADE,
+    team_id UUID NOT NULL REFERENCES public.teams(id) ON DELETE CASCADE,
+    role TEXT NOT NULL CHECK (role IN ('batsman', 'bowler', 'all-rounder', 'wicket-keeper', 'captain')),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (user_id, season_id)
+);
+
+-- Enable Row-Level Security
+ALTER TABLE public.league_enrollments ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies if any
+DROP POLICY IF EXISTS "League enrollments are readable by everyone" ON public.league_enrollments;
+DROP POLICY IF EXISTS "Users can manage their own league enrollment" ON public.league_enrollments;
+
+-- RLS Policies
+CREATE POLICY "League enrollments are readable by everyone" 
+ON public.league_enrollments FOR SELECT USING (true);
+
+CREATE POLICY "Users can manage their own league enrollment" 
+ON public.league_enrollments FOR ALL USING (auth.uid() = user_id);
+
+-- Fast Query Indexes
+CREATE INDEX IF NOT EXISTS idx_enrollment_lookup 
+ON public.league_enrollments (league_id, season_id, team_id);
+
+-- 9. Seed Leagues
+INSERT INTO public.leagues (name, code, description) VALUES
+('Indian Premier League', 'ipl', 'The premier T20 franchise league in India. High intensity matches, star developers, and fierce corporate rivalries.'),
+('ICC Cricket World Cup', 'cwc', 'The pinnacle of international cricket. Developers representing their nations on the global stage for absolute coding glory.'),
+('Big Bash League', 'bbl', 'Australia''s showcase T20 tournament. Fast decks, boundary clearing power commits, and active community participation.')
+ON CONFLICT (name) DO NOTHING;
+
+-- 10. Seed Seasons (Linked to seeded leagues)
+INSERT INTO public.seasons (league_id, name, start_date, end_date, is_active)
+SELECT id, 'IPL Season 2026', '2026-03-01 00:00:00+00', '2026-06-01 00:00:00+00', true FROM public.leagues WHERE code = 'ipl'
+UNION ALL
+SELECT id, 'World Cup 2027', '2027-10-01 00:00:00+00', '2027-12-01 00:00:00+00', true FROM public.leagues WHERE code = 'cwc'
+UNION ALL
+SELECT id, 'BBL Season 2026', '2026-12-01 00:00:00+00', '2027-02-01 00:00:00+00', true FROM public.leagues WHERE code = 'bbl'
+ON CONFLICT DO NOTHING;
+
+-- 11. Seed Teams
+INSERT INTO public.teams (league_id, name, short_name)
+SELECT id, 'Chennai Super Kings', 'CSK' FROM public.leagues WHERE code = 'ipl'
+UNION ALL
+SELECT id, 'Royal Challengers Bengaluru', 'RCB' FROM public.leagues WHERE code = 'ipl'
+UNION ALL
+SELECT id, 'Mumbai Indians', 'MI' FROM public.leagues WHERE code = 'ipl'
+UNION ALL
+SELECT id, 'Kolkata Knight Riders', 'KKR' FROM public.leagues WHERE code = 'ipl'
+ON CONFLICT DO NOTHING;

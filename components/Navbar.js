@@ -65,6 +65,9 @@ export default function Navbar() {
 
         {/* Center: Dynamic Navigation Links */}
         <nav className="hidden items-center gap-6 md:flex">
+          <Link href="/leagues" className="text-sm font-medium text-text-secondary hover:text-green-core transition-colors">
+            Leagues
+          </Link>
           <a href="#explainers" className="text-sm font-medium text-text-secondary hover:text-green-core transition-colors">
             How it Works
           </a>

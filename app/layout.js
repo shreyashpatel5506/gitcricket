@@ -1,6 +1,7 @@
 import Script from 'next/script'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ReferralWidget from '@/components/ReferralWidget';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -70,6 +71,7 @@ l.parentNode.insertBefore(s, l);
 </head>
       <body className="bg-bg-void text-text-primary min-h-full flex flex-col antialiased">
         {children}
+        <ReferralWidget />
       </body>
     </html>
   );

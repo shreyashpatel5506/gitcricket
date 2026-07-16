@@ -38,6 +38,10 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Ensure email and provider columns exist in case the table was created previously without them
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS provider TEXT;
+
 -- 3. Create User Sync Trigger
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -126,6 +130,9 @@ CREATE TABLE IF NOT EXISTS public.league_enrollments (
     updated_at TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE (user_id, season_id)
 );
+
+-- Ensure team_id is nullable in case the table already existed with a NOT NULL constraint
+ALTER TABLE public.league_enrollments ALTER COLUMN team_id DROP NOT NULL;
 
 -- Enable RLS for enrollments
 ALTER TABLE public.league_enrollments ENABLE ROW LEVEL SECURITY;

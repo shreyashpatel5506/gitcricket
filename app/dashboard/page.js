@@ -64,7 +64,6 @@ export default async function Page() {
         github_username: user.user_metadata?.user_name || user.user_metadata?.preferred_username || null,
         full_name: user.user_metadata?.full_name || user.user_metadata?.name || null,
         avatar_url: user.user_metadata?.avatar_url || null,
-        email: user.email || null,
         updated_at: new Date().toISOString()
       })
       .select('*')

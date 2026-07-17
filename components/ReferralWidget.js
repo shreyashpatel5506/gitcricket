@@ -54,7 +54,7 @@ export default function ReferralWidget() {
     {
       name: 'geektastic',
       description: 'Get your code reviewed by experts',
-      offer: 'Evaluate candidates with expert-reviewed multiple choice and take-home code challenges.',
+      offer: 'Evaluate candidates with code challenges.',
       link: 'https://app.geektastic.com/register?utm_source=devref&utm_campaign=UYMv-ppbdL3NynvqcEariA&utm_medium=site#hirer',
       gradient: 'from-green-500/10 to-lime-600/10 hover:border-green-400/40',
       iconColor: 'text-green-400',

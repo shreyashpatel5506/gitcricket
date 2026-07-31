@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
+import LoginModal from '@/components/LoginModal';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { 
@@ -50,6 +51,7 @@ export default function LeaguesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -86,7 +88,7 @@ export default function LeaguesPage() {
 
   const handleJoinClick = (league: League) => {
     if (!user) {
-      alert('Please log in using the "Connect GitHub" button in the navigation header to join a league!');
+      setIsLoginModalOpen(true);
       return;
     }
     
@@ -439,7 +441,11 @@ export default function LeaguesPage() {
           </div>
         </div>
       )}
-
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        message="Please connect your GitHub account to join a tournament league and compete with other developers."
+      />
     </div>
   );
 }

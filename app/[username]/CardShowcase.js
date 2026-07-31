@@ -3,6 +3,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import LoginModal from '@/components/LoginModal';
+import { createClient } from '@/lib/supabase/client';
 import PlayerCard from '@/components/PlayerCard';
 import StatBar from '@/components/StatBar';
 import { toPng } from 'html-to-image';
@@ -62,6 +64,27 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
 
+  // Authentication & Login Modal states
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+    fetchSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   // Eligibility conditions
   const isT20Eligible = (profile.total_stars || 0) >= 15;
   const isTestEligible = (card.experience || 0) >= 75 || (profile.contribution_count || 0) >= 500;
@@ -89,6 +112,10 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
 
   // Toggle Bookmark status
   const handleBookmarkToggle = async () => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     setIsBookmarking(true);
     try {
       if (isBookmarked) {
@@ -109,7 +136,7 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
         if (result.success) {
           setIsBookmarked(true);
         } else if (response.status === 401) {
-          alert('Please login to bookmark player cards!');
+          setIsLoginModalOpen(true);
         }
       }
     } catch (err) {
@@ -165,7 +192,14 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
   // Copy Link to clipboard
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      const shareText = `Check out my GitCric player card! 🏏\n` +
+        `Name: @${profile.github_username}\n` +
+        `Overall: ${activeRatings.overall} OVR\n` +
+        `Role: ${activeRatings.player_role || card.player_role}\n` +
+        `Stats: Batting ${activeRatings.batting} | Bowling ${activeRatings.bowling} | Technique ${activeRatings.technique} | Fitness ${activeRatings.fitness}\n\n` +
+        `View profile: ${window.location.origin}/${profile.github_username}`;
+
+      await navigator.clipboard.writeText(shareText);
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
@@ -452,6 +486,11 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
 
         </div>
       </main>
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        message="Please connect your GitHub account to bookmark player cards in your locker room."
+      />
     </div>
   );
 }

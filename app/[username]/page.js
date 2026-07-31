@@ -307,8 +307,51 @@ export async function generateMetadata({ params }) {
     return {};
   }
 
+  let title = `@${username}'s Cricket Player Card — GitCric`;
+  let description = `Inspect @${username}'s coding stats mapped directly as batting, bowling, technique and fitness ratings.`;
+  let avatarUrl = '';
+
+  try {
+    const { data: cachedProfile } = await supabase
+      .from('github_profile_cache')
+      .select('id, avatar_url, name')
+      .eq('github_username', username)
+      .maybeSingle();
+
+    if (cachedProfile) {
+      avatarUrl = cachedProfile.avatar_url;
+      const { data: cachedCard } = await supabase
+        .from('generated_cards')
+        .select('overall, player_role')
+        .eq('github_profile_id', cachedProfile.id)
+        .eq('theme', 'dark')
+        .maybeSingle();
+
+      if (cachedCard) {
+        const displayName = cachedProfile.name || username;
+        title = `🏏 ${displayName} (${cachedCard.overall} OVR | ${cachedCard.player_role}) — GitCric`;
+        description = `Check out @${username}'s 3D cricket player card! Overall: ${cachedCard.overall} | Role: ${cachedCard.player_role}. GitCric transforms GitHub metrics into interactive sports sports player cards.`;
+      }
+    }
+  } catch (err) {
+    console.warn('Metadata fetch failed:', err);
+  }
+
   return {
-    title: `@${username}'s Cricket Player Card — GitCric`,
-    description: `Inspect @${username}'s coding stats mapped directly as batting, bowling, technique and fitness ratings.`
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: avatarUrl ? [{ url: avatarUrl }] : [],
+      type: 'profile',
+      username: username,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: avatarUrl ? [avatarUrl] : [],
+    }
   };
 }

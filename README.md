@@ -92,11 +92,21 @@ npm run build
 * **Robots Configuration (`/robots.txt`)**: Custom directives preventing search engines from crawling backend `/api/` endpoints while indexing static routes and sitemaps.
 * **Metadata & OG Integration**: High-SEO layouts featuring dynamic title generation, static keywords, and dynamic `next/og` scorecard graphics.
 
----
-
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to open issues or submit pull requests to enhance themes, add new stats mappings, or improve overall performance.
+Contributions are welcome! If you are a first-time contributor looking to get started, you can help us expand our **Location Mapping** list:
+
+- **Easiest Task:** Help map missing cities, states, or country abbreviations in [transformer.js](features/scanner/utils/transformer.js).
+- Look for the `location-mapping` labeled issues on our repository, or simply add missing locations for your home country!
+- ⚠️ **Note:** If you submit a pull request, **please consider starring the repository** to support the project and speed up the review/merge approval process! 🚀
+
+### ✨ Contributors
+
+Thanks to these wonderful people for contributing to GitCric:
+
+[![Contributors Grid](https://contrib.rocks/image?repo=shreyashpatel5506/gitcricket)](https://github.com/shreyashpatel5506/gitcricket/graphs/contributors)
+
+Made with [contrib.rocks](https://contrib.rocks).
 
 ---
 

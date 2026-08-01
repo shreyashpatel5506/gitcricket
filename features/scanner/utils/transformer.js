@@ -483,6 +483,250 @@ const countryLookup = [
       'saudi arabia', 'sa',
       'riyadh', 'jeddah', 'mecca', 'medina', 'dammam'
     ]
+  },
+  {
+    name: 'Greece',
+    patterns: ['greece', 'gr', 'athens', 'thessaloniki', 'patras']
+  },
+  {
+    name: 'Czech Republic',
+    patterns: ['czech republic', 'czechia', 'cz', 'prague', 'brno', 'ostrava']
+  },
+  {
+    name: 'Hungary',
+    patterns: ['hungary', 'hu', 'budapest', 'debrecen', 'szeged']
+  },
+  {
+    name: 'Taiwan',
+    patterns: ['taiwan', 'tw', 'taipei', 'kaohsiung', 'hsinchu', 'taichung']
+  },
+  {
+    name: 'Hong Kong',
+    patterns: ['hong kong', 'hk']
+  },
+  {
+    name: 'Iran',
+    patterns: ['iran', 'ir', 'tehran', 'isfahan', 'shiraz', 'tabriz']
+  },
+  {
+    name: 'Morocco',
+    patterns: ['morocco', 'ma', 'casablanca', 'rabat', 'marrakech', 'fez']
+  },
+  {
+    name: 'Algeria',
+    patterns: ['algeria', 'dz', 'algiers', 'oran', 'constantine']
+  },
+  {
+    name: 'Tunisia',
+    patterns: ['tunisia', 'tn', 'tunis', 'sfax', 'sousse']
+  },
+  {
+    name: 'Ghana',
+    patterns: ['ghana', 'gh', 'accra', 'kumasi', 'tamale']
+  },
+  {
+    name: 'Chile',
+    patterns: ['chile', 'cl', 'santiago', 'valparaiso', 'concepcion']
+  },
+  {
+    name: 'Peru',
+    patterns: ['peru', 'pe', 'lima', 'arequipa', 'trujillo']
+  },
+  {
+    name: 'Venezuela',
+    patterns: ['venezuela', 've', 'caracas', 'maracaibo', 'valencia']
+  },
+  {
+    name: 'Ecuador',
+    patterns: ['ecuador', 'ec', 'quito', 'guayaquil', 'cuenca']
+  },
+  {
+    name: 'Uruguay',
+    patterns: ['uruguay', 'uy', 'montevideo']
+  },
+  {
+    name: 'Costa Rica',
+    patterns: ['costa rica', 'cr', 'san jose', 'san josé']
+  },
+  {
+    name: 'Panama',
+    patterns: ['panama', 'pa', 'panama city']
+  },
+  {
+    name: 'Dominican Republic',
+    patterns: ['dominican republic', 'do', 'santo domingo']
+  },
+  {
+    name: 'Puerto Rico',
+    patterns: ['puerto rico', 'pr', 'san juan']
+  },
+  {
+    name: 'Cuba',
+    patterns: ['cuba', 'cu', 'havana']
+  },
+  {
+    name: 'Kazakhstan',
+    patterns: ['kazakhstan', 'kz', 'almaty', 'astana', 'shymkent']
+  },
+  {
+    name: 'Uzbekistan',
+    patterns: ['uzbekistan', 'uz', 'tashkent', 'samarkand']
+  },
+  {
+    name: 'Azerbaijan',
+    patterns: ['azerbaijan', 'az', 'baku']
+  },
+  {
+    name: 'Georgia',
+    patterns: ['georgia', 'ge', 'tbilisi', 'batumi']
+  },
+  {
+    name: 'Armenia',
+    patterns: ['armenia', 'am', 'yerevan']
+  },
+  {
+    name: 'Belarus',
+    patterns: ['belarus', 'by', 'minsk', 'gomel']
+  },
+  {
+    name: 'Bulgaria',
+    patterns: ['bulgaria', 'bg', 'sofia', 'plovdiv', 'varna']
+  },
+  {
+    name: 'Croatia',
+    patterns: ['croatia', 'hr', 'zagreb', 'split', 'rijeka']
+  },
+  {
+    name: 'Serbia',
+    patterns: ['serbia', 'rs', 'belgrade', 'novi sad', 'nis']
+  },
+  {
+    name: 'Slovakia',
+    patterns: ['slovakia', 'sk', 'bratislava', 'kosice']
+  },
+  {
+    name: 'Slovenia',
+    patterns: ['slovenia', 'si', 'ljubljana', 'maribor']
+  },
+  {
+    name: 'Lithuania',
+    patterns: ['lithuania', 'lt', 'vilnius', 'kaunas']
+  },
+  {
+    name: 'Latvia',
+    patterns: ['latvia', 'lv', 'riga']
+  },
+  {
+    name: 'Estonia',
+    patterns: ['estonia', 'ee', 'tallinn', 'tartu']
+  },
+  {
+    name: 'Iceland',
+    patterns: ['iceland', 'is', 'reykjavik']
+  },
+  {
+    name: 'Luxembourg',
+    patterns: ['luxembourg', 'lu']
+  },
+  {
+    name: 'Cyprus',
+    patterns: ['cyprus', 'cy', 'nicosia', 'limassol']
+  },
+  {
+    name: 'Malta',
+    patterns: ['malta', 'mt', 'valletta']
+  },
+  {
+    name: 'Iraq',
+    patterns: ['iraq', 'iq', 'baghdad', 'erbil', 'basra']
+  },
+  {
+    name: 'Jordan',
+    patterns: ['jordan', 'jo', 'amman']
+  },
+  {
+    name: 'Lebanon',
+    patterns: ['lebanon', 'lb', 'beirut']
+  },
+  {
+    name: 'Kuwait',
+    patterns: ['kuwait', 'kw', 'kuwait city']
+  },
+  {
+    name: 'Qatar',
+    patterns: ['qatar', 'qa', 'doha']
+  },
+  {
+    name: 'Oman',
+    patterns: ['oman', 'om', 'muscat']
+  },
+  {
+    name: 'Bahrain',
+    patterns: ['bahrain', 'bh', 'manama']
+  },
+  {
+    name: 'Myanmar',
+    patterns: ['myanmar', 'mm', 'yangon', 'mandalay']
+  },
+  {
+    name: 'Cambodia',
+    patterns: ['cambodia', 'kh', 'phnom penh']
+  },
+  {
+    name: 'Laos',
+    patterns: ['laos', 'la', 'vientiane']
+  },
+  {
+    name: 'Mongolia',
+    patterns: ['mongolia', 'mn', 'ulaanbaatar']
+  },
+  {
+    name: 'Jamaica',
+    patterns: ['jamaica', 'jm', 'kingston']
+  },
+  {
+    name: 'Trinidad and Tobago',
+    patterns: ['trinidad', 'tobago', 'tt', 'port of spain']
+  },
+  {
+    name: 'Zimbabwe',
+    patterns: ['zimbabwe', 'zw', 'harare']
+  },
+  {
+    name: 'Uganda',
+    patterns: ['uganda', 'ug', 'kampala']
+  },
+  {
+    name: 'Ethiopia',
+    patterns: ['ethiopia', 'et', 'addis ababa']
+  },
+  {
+    name: 'Tanzania',
+    patterns: ['tanzania', 'tz', 'dar es salaam', 'dodoma']
+  },
+  {
+    name: 'Senegal',
+    patterns: ['senegal', 'sn', 'dakar']
+  },
+  {
+    name: 'Ivory Coast',
+    patterns: ['ivory coast', 'cote d\'ivoire', 'ci', 'abidjan']
+  },
+  {
+    name: 'Cameroon',
+    patterns: ['cameroon', 'cm', 'yaounde', 'douala']
+  },
+  {
+    name: 'Angola',
+    patterns: ['angola', 'ao', 'luanda']
+  },
+  {
+    name: 'Mozambique',
+    patterns: ['mozambique', 'mz', 'maputo']
+  },
+  {
+    name: 'Madagascar',
+    patterns: ['madagascar', 'mg', 'antananarivo']
   }
 ];
 

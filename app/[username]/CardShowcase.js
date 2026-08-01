@@ -57,6 +57,7 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
   const [isDownloading, setIsDownloading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isReadmeCopied, setIsReadmeCopied] = useState(false);
+  const [isLinkedInSharing, setIsLinkedInSharing] = useState(false);
   
   // Match format selectors
   const [activeMode, setActiveMode] = useState('odi');
@@ -184,8 +185,21 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
   };
 
   // Share on LinkedIn
-  const handleShareLinkedIn = () => {
+  // Share on LinkedIn
+  const handleShareLinkedIn = async () => {
     const shareUrl = `${window.location.origin}/${profile.github_username.toLowerCase()}`;
+    const shareText = `Check out my GitCric player card! 🏏\n\n` +
+      `Overall: ${activeRatings.overall} OVR | Role: ${activeRatings.player_role || card.player_role}\n\n` +
+      `Generate your scorecard here: ${shareUrl}`;
+
+    try {
+      await navigator.clipboard.writeText(shareText);
+      setIsLinkedInSharing(true);
+      setTimeout(() => setIsLinkedInSharing(false), 2500);
+    } catch (err) {
+      console.warn('Clipboard copy failed:', err);
+    }
+
     const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
     window.open(linkedinUrl, '_blank');
   };
@@ -320,7 +334,7 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
                       <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                         <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
                       </svg>
-                      LinkedIn
+                      {isLinkedInSharing ? 'Text Copied!' : 'LinkedIn'}
                     </button>
 
                     {/* Twitter */}

@@ -337,13 +337,16 @@ export async function generateMetadata({ params }) {
     console.warn('Metadata fetch failed:', err);
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gitcric.me';
+  const ogImageUrl = `${siteUrl}/api/og?username=${username}`;
+
   return {
     title,
     description,
     openGraph: {
       title,
       description,
-      images: avatarUrl ? [{ url: avatarUrl }] : [],
+      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
       type: 'profile',
       username: username,
     },
@@ -351,7 +354,7 @@ export async function generateMetadata({ params }) {
       card: 'summary_large_image',
       title,
       description,
-      images: avatarUrl ? [avatarUrl] : [],
+      images: [ogImageUrl],
     }
   };
 }

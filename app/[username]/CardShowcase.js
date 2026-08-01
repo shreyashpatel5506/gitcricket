@@ -56,6 +56,7 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
   const cardRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isReadmeCopied, setIsReadmeCopied] = useState(false);
   
   // Match format selectors
   const [activeMode, setActiveMode] = useState('odi');
@@ -184,20 +185,50 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
 
   // Share on LinkedIn
   const handleShareLinkedIn = () => {
-    const shareUrl = window.location.href;
+    const shareUrl = `${window.location.origin}/${profile.github_username.toLowerCase()}`;
     const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
     window.open(linkedinUrl, '_blank');
+  };
+
+  // Share on Twitter / X
+  const handleShareTwitter = () => {
+    const shareUrl = `${window.location.origin}/${profile.github_username.toLowerCase()}`;
+    const shareText = `Check out my GitCric player card! 🏏\n\nOverall: ${activeRatings.overall} OVR | Role: ${activeRatings.player_role || card.player_role}\n`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}&hashtags=gitcric,github,cricket,dev`;
+    window.open(twitterUrl, '_blank');
+  };
+
+  // Share on WhatsApp
+  const handleShareWhatsApp = () => {
+    const shareUrl = `${window.location.origin}/${profile.github_username.toLowerCase()}`;
+    const shareText = `Check out my GitCric player card! 🏏\n\nOverall: ${activeRatings.overall} OVR | Role: ${activeRatings.player_role || card.player_role}\n\nView my card profile here: ${shareUrl}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  // Copy GitHub Profile README Badge
+  const handleCopyReadme = async () => {
+    const siteUrl = window.location.origin;
+    const markdownText = `[![GitCric Player Card](${siteUrl}/api/og?username=${profile.github_username.toLowerCase()})](${siteUrl}/${profile.github_username.toLowerCase()})`;
+    try {
+      await navigator.clipboard.writeText(markdownText);
+      setIsReadmeCopied(true);
+      setTimeout(() => setIsReadmeCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy markdown badge:', err);
+    }
   };
 
   // Copy Link to clipboard
   const handleCopyLink = async () => {
     try {
+      const shareUrl = `${window.location.origin}/${profile.github_username.toLowerCase()}`;
       const shareText = `Check out my GitCric player card! 🏏\n` +
         `Name: @${profile.github_username}\n` +
         `Overall: ${activeRatings.overall} OVR\n` +
         `Role: ${activeRatings.player_role || card.player_role}\n` +
         `Stats: Batting ${activeRatings.batting} | Bowling ${activeRatings.bowling} | Technique ${activeRatings.technique} | Fitness ${activeRatings.fitness}\n\n` +
-        `View profile: ${window.location.origin}/${profile.github_username}`;
+        `View profile: ${shareUrl}`;
 
       await navigator.clipboard.writeText(shareText);
       setIsCopied(true);
@@ -276,15 +307,56 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
                   <Star className={`w-4 h-4 ${isBookmarked ? 'fill-current' : ''}`} />
                   {isBookmarked ? 'Saved to Dashboard' : 'Favorite Player Card'}
                 </button>
-                <button
-                  onClick={handleShareLinkedIn}
-                  className="w-full flex h-11 items-center justify-center gap-2 rounded-xl border border-border-hairline text-sm font-bold bg-[#0A66C2]/15 text-[#0A66C2] hover:bg-[#0A66C2]/25 hover:text-white transition-all cursor-pointer"
-                >
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-                  </svg>
-                  Share on LinkedIn
-                </button>
+                <div className="w-full border-t border-border-hairline pt-4 mt-2">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-text-tertiary mb-3 text-center">
+                    Share Scorecard
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {/* LinkedIn */}
+                    <button
+                      onClick={handleShareLinkedIn}
+                      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-border-hairline text-xs font-bold bg-[#0A66C2]/10 text-[#0A66C2] hover:bg-[#0A66C2]/20 hover:text-white transition-all cursor-pointer"
+                    >
+                      <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                      </svg>
+                      LinkedIn
+                    </button>
+
+                    {/* Twitter */}
+                    <button
+                      onClick={handleShareTwitter}
+                      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-border-hairline text-xs font-bold bg-[#1DA1F2]/10 text-[#1DA1F2] hover:bg-[#1DA1F2]/20 hover:text-white transition-all cursor-pointer"
+                    >
+                      <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                      Twitter / X
+                    </button>
+
+                    {/* WhatsApp */}
+                    <button
+                      onClick={handleShareWhatsApp}
+                      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-border-hairline text-xs font-bold bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366]/20 hover:text-white transition-all cursor-pointer"
+                    >
+                      <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M12.004 2C6.48 2 2 6.48 2 12.004c0 1.77.46 3.42 1.27 4.96L2 22l5.22-1.27c1.47.8 3.12 1.27 4.78 1.27C17.52 22 22 17.52 22 12.004 22 6.48 17.52 2 12.004 2zm0 1.66c4.61 0 8.35 3.74 8.35 8.34a8.35 8.35 0 0 1-8.35 8.34c-1.55 0-3.07-.43-4.39-1.24l-.32-.19-3.26.79.8-3.17-.21-.34A8.34 8.34 0 0 1 3.66 12c0-4.6 3.74-8.34 8.34-8.34zm-1.6 3.26c-.22 0-.46.05-.67.24-.26.24-1.02.99-1.02 2.42 0 1.44 1.05 2.83 1.2 3.03.15.2 2.02 3.08 4.9 4.32.69.29 1.22.47 1.64.6.69.22 1.32.19 1.82.11.56-.08 1.72-.7 1.96-1.38.24-.68.24-1.26.17-1.38-.07-.12-.27-.19-.57-.34l-2.7-1.33c-.3-.15-.52-.08-.7.13l-1.05 1.3c-.15.19-.38.23-.68.08-.3-.15-1.28-.47-2.44-1.51-.9-.8-1.5-1.8-1.68-2.1-.18-.3-.02-.46.13-.61.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.38-.02-.53l-.7-1.68c-.28-.68-.53-.55-.7-.56-.16-.01-.35-.01-.56-.01z"/>
+                      </svg>
+                      WhatsApp
+                    </button>
+
+                    {/* GitHub Markdown Badge */}
+                    <button
+                      onClick={handleCopyReadme}
+                      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-border-hairline text-xs font-bold bg-[#6e5494]/10 text-[#a28dc4] hover:bg-[#6e5494]/20 hover:text-white transition-all cursor-pointer"
+                    >
+                      <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                      </svg>
+                      {isReadmeCopied ? 'Badge Copied!' : 'GitHub Badge'}
+                    </button>
+                  </div>
+                </div>
               </div>
 
             </div>

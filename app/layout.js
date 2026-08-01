@@ -23,7 +23,7 @@ export const metadata = {
   openGraph: {
     title: "GitCric — Turn Your GitHub Profile into a Cricket Player Card",
     description: "Convert your coding activity into cricket runs, wickets, and form streaks. Unlock premium card designs.",
-    url: "https://gitcric.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.gitcric.me",
     siteName: "GitCric",
     locale: "en_US",
     type: "website",
@@ -43,6 +43,33 @@ export default function RootLayout({ children }) {
   />
   
 <meta name="referrer" content="no-referrer-when-downgrade" />
+
+  {process.env.NEXT_PUBLIC_GA_ID && (
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+        `}
+      </Script>
+    </>
+  )}
+
+  {process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID && (
+    <Script
+      async
+      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+      crossOrigin="anonymous"
+      strategy="afterInteractive"
+    />
+  )}
+
   {/* <Script id="hilltopads" strategy="afterInteractive">
     {`
     (function(jbm){

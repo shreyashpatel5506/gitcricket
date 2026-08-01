@@ -158,7 +158,7 @@ export default function LeaguesPage() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen bg-bg-void text-text-primary">
+    <div className="flex flex-col min-h-screen bg-transparent text-text-primary">
       <Navbar />
 
       <main className="flex-1 py-12 md:py-20">

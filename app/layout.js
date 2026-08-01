@@ -2,6 +2,7 @@ import Script from 'next/script'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ReferralWidget from '@/components/ReferralWidget';
+import CricketAnimation from '@/components/CricketAnimation';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -96,8 +97,9 @@ l.parentNode.insertBefore(s, l);
 })({})`}
 </Script> */}
 </head>
-      <body className="bg-bg-void text-text-primary min-h-full flex flex-col antialiased">
+      <body className="bg-bg-void text-text-primary min-h-full flex flex-col antialiased relative isolate">
         {children}
+        <CricketAnimation />
         <ReferralWidget />
       </body>
     </html>

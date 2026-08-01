@@ -253,7 +253,7 @@ export default function CardShowcase({ profile, card, activeEnrollment = null, l
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-bg-void text-text-primary">
+    <div className="flex flex-col min-h-screen bg-transparent text-text-primary">
       <Navbar />
 
       {/* Showcase area */}

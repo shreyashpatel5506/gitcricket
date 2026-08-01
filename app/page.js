@@ -11,14 +11,14 @@ import {
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-bg-void text-text-primary">
+    <div className="flex flex-col min-h-screen bg-transparent text-text-primary">
       {/* Navigation Header */}
       <Navbar />
 
       {/* Hero Section */}
       <main className="flex-1">
-        <section className="relative overflow-hidden py-20 lg:py-32">
-          {/* Ambient floodlight background effects */}
+        <section className="relative isolate overflow-hidden py-20 lg:py-32">
+          {/* Ambient floodlight background effects & Cricket Animation */}
           <div className="absolute top-1/4 left-1/2 -z-10 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-core/10 blur-[120px]"></div>
           <div className="absolute top-1/3 left-1/3 -z-10 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-core/5 blur-[100px]"></div>
 

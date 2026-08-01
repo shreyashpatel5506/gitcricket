@@ -146,7 +146,7 @@ export default function LeagueDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen bg-bg-void text-text-primary">
+      <div className="flex flex-col min-h-screen bg-transparent text-text-primary">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center gap-3">
           <Loader2 className="w-10 h-10 text-green-core animate-spin" />
@@ -158,7 +158,7 @@ export default function LeagueDashboard() {
 
   if (!league || !activeSeason) {
     return (
-      <div className="flex flex-col min-h-screen bg-bg-void text-text-primary">
+      <div className="flex flex-col min-h-screen bg-transparent text-text-primary">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
           <Trophy className="w-16 h-16 text-text-tertiary" />
@@ -183,7 +183,7 @@ export default function LeagueDashboard() {
   const hasFranchiseTeams = teams.length > 0;
 
   return (
-    <div className="flex flex-col min-h-screen bg-bg-void text-text-primary">
+    <div className="flex flex-col min-h-screen bg-transparent text-text-primary">
       <Navbar />
 
       {/* Hero Header */}

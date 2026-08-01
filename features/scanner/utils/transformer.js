@@ -97,22 +97,468 @@ function aggregateLanguages(repoNodes) {
 /**
  * Parses location string and resolves clean country name. Defaults to India.
  */
+const countryLookup = [
+  {
+    name: 'India',
+    patterns: [
+      'india', 'bharat', 'hindustan',
+      // States & UTs
+      'andhra pradesh', 'arunachal pradesh', 'assam', 'bihar', 'chhattisgarh', 'goa', 'gujarat', 'haryana', 
+      'himachal pradesh', 'jharkhand', 'karnataka', 'kerala', 'madhya pradesh', 'maharashtra', 'manipur', 
+      'meghalaya', 'mizoram', 'nagaland', 'odisha', 'orissa', 'punjab', 'rajasthan', 'sikkim', 'tamil nadu', 'telangana', 
+      'tripura', 'uttar pradesh', 'uttarakhand', 'west bengal', 'delhi', 'new delhi', 'ncr', 'jammu', 'kashmir', 
+      'ladakh', 'puducherry', 'pondicherry', 'chandigarh',
+      // Indian cities
+      'mumbai', 'bombay', 'bengaluru', 'bangalore', 'pune', 'hyderabad', 'chennai', 'madras', 'kolkata', 'calcutta', 
+      'gurgaon', 'gurugram', 'noida', 'ghaziabad', 'faridabad', 'ahmedabad', 'jaipur', 'surat', 'lucknow', 'kanpur', 
+      'nagpur', 'indore', 'thane', 'bhopal', 'visakhapatnam', 'vizag', 'patna', 'vadodara', 'ludhiana', 
+      'agra', 'nashik', 'meerut', 'rajkot', 'varanasi', 'srinagar', 'aurangabad', 'dhanbad', 'amritsar', 
+      'navi mumbai', 'allahabad', 'prayagraj', 'howrah', 'ranchi', 'gwalior', 'jabalpur', 'coimbatore', 
+      'vijayawada', 'jodhpur', 'madurai', 'raipur', 'kota', 'guwahati', 'solapur', 'hubli', 'dharwad', 
+      'bareilly', 'moradabad', 'mysore', 'aligarh', 'jalandhar', 'tiruchirappalli', 'bhubaneswar', 'salem', 
+      'warangal', 'guntur', 'kochi', 'cochin', 'trivandrum', 'thiruvananthapuram', 'calicut', 'kozhikode', 
+      'dehradun', 'deoghar', 'rourkela', 'durgapur', 'asansol', 'siliguri', 'gaya', 'ajmer', 'udaipur', 
+      'belgaum', 'mangalore', 'mangaluru', 'shimoga', 'tumkur', 'davanagere', 'bellary', 'bijapur', 
+      'gulbarga', 'panaji', 'panjim', 'shimla', 'haridwar', 'rishikesh', 'mathura', 'vrindavan', 'jhansi', 
+      'tirupati', 'vellore', 'ernakulam', 'thrissur', 'kollam', 'alappuzha', 'kottayam', 'palakkad', 
+      'malappuram', 'kannur', 'nagaland', 'manipur', 'shillong', 'aizawl', 'imphal', 'gangtok', 'itanagar',
+      'port blair', 'silvassa', 'daman', 'diu', 'kavaratti'
+    ]
+  },
+  {
+    name: 'United States',
+    patterns: [
+      'united states', 'usa', 'u.s.a.', 'united states of america',
+      // US States
+      'alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida', 
+      'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine', 
+      'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 
+      'nevada', 'new hampshire', 'new jersey', 'new mexico', 'new york', 'north carolina', 'north dakota', 'ohio', 
+      'oklahoma', 'oregon', 'pennsylvania', 'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 
+      'utah', 'vermont', 'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming',
+      // US Cities
+      'san francisco', 'sf', 'silicon valley', 'los angeles', 'la', 'seattle', 'chicago', 'boston', 'austin', 
+      'new york city', 'nyc', 'houston', 'phoenix', 'philadelphia', 'san antonio', 'san diego', 'dallas', 'san jose', 
+      'jacksonville', 'columbus', 'indianapolis', 'charlotte', 'denver', 'washington dc', 'washington d.c.', 
+      'el paso', 'nashville', 'detroit', 'portland', 'las vegas', 'atlanta', 'miami', 'pittsburgh', 'minneapolis',
+      'orlando', 'tampa', 'salt lake city', 'slc', 'baltimore', 'boston', 'cambridge', 'redmond', 'bellevue', 
+      'cupertino', 'mountain view', 'palo alto', 'sunnyvale', 'santa clara', 'berkeley', 'oakland', 'fremont',
+      'sacramento', 'pittsburgh', 'philadelphia', 'charlotte', 'raleigh', 'durham', 'chapel hill'
+    ],
+    stateCodes: [
+      'al', 'ak', 'az', 'ar', 'ca', 'co', 'ct', 'de', 'fl', 'ga', 'hi', 'id', 'il', 'in', 'ia', 'ks', 'ky', 'la', 
+      'me', 'md', 'ma', 'mi', 'mn', 'ms', 'mo', 'mt', 'ne', 'nv', 'nh', 'nj', 'nm', 'ny', 'nc', 'nd', 'oh', 'ok', 
+      'or', 'pa', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'wa', 'wv', 'wi', 'wy'
+    ]
+  },
+  {
+    name: 'United Kingdom',
+    patterns: [
+      'united kingdom', 'uk', 'u.k.', 'great britain', 'britain', 'england', 'scotland', 'wales', 'northern ireland',
+      'london', 'manchester', 'birmingham', 'leeds', 'glasgow', 'edinburgh', 'liverpool', 'bristol', 'sheffield', 
+      'newcastle', 'southampton', 'nottingham', 'leicester', 'coventry', 'belfast', 'cardiff', 'oxford', 'cambridge'
+    ]
+  },
+  {
+    name: 'Canada',
+    patterns: [
+      'canada',
+      'ontario', 'quebec', 'british columbia', 'alberta', 'manitoba', 'saskatchewan', 'nova scotia', 'new brunswick', 
+      'newfoundland', 'labrador', 'prince edward island', 'toronto', 'vancouver', 'montreal', 'calgary', 'ottawa', 
+      'edmonton', 'winnipeg', 'quebec city', 'halifax'
+    ]
+  },
+  {
+    name: 'Australia',
+    patterns: [
+      'australia',
+      'new south wales', 'nsw', 'victoria', 'queensland', 'western australia', 'south australia', 'tasmania',
+      'sydney', 'melbourne', 'brisbane', 'perth', 'adelaide', 'gold coast', 'canberra'
+    ]
+  },
+  {
+    name: 'Germany',
+    patterns: [
+      'germany', 'deutschland',
+      'berlin', 'munich', 'münchen', 'hamburg', 'frankfurt', 'cologne', 'köln', 'stuttgart', 'düsseldorf', 
+      'dortmund', 'essen', 'leipzig', 'bremen', 'dresden', 'hanover', 'nuremberg'
+    ]
+  },
+  {
+    name: 'Pakistan',
+    patterns: [
+      'pakistan', 'pk',
+      'karachi', 'lahore', 'islamabad', 'rawalpindi', 'faisalabad', 'peshawar', 'quetta', 'multan', 'sialkot', 'gujranwala'
+    ]
+  },
+  {
+    name: 'Bangladesh',
+    patterns: [
+      'bangladesh', 'bd',
+      'dhaka', 'chittagong', 'sylhet', 'khulna', 'rajshahi', 'barisal', 'rangpur', 'comilla', 'gazipur'
+    ]
+  },
+  {
+    name: 'Sri Lanka',
+    patterns: [
+      'sri lanka', 'lk',
+      'colombo', 'kandy', 'galle', 'jaffna', 'negombo', 'gampaha'
+    ]
+  },
+  {
+    name: 'Nepal',
+    patterns: [
+      'nepal', 'np',
+      'kathmandu', 'pokhara', 'lalitpur', 'biratnagar', 'dharan'
+    ]
+  },
+  {
+    name: 'France',
+    patterns: [
+      'france', 'fr',
+      'paris', 'marseille', 'lyon', 'toulouse', 'nice', 'nantes', 'strasbourg', 'montpellier', 'bordeaux', 'lille'
+    ]
+  },
+  {
+    name: 'Japan',
+    patterns: [
+      'japan', 'jp',
+      'tokyo', 'yokohama', 'osaka', 'nagoya', 'sapporo', 'kobe', 'kyoto', 'fukuoka', 'kawasaki', 'saitama'
+    ]
+  },
+  {
+    name: 'Netherlands',
+    patterns: [
+      'netherlands', 'holland', 'nl',
+      'amsterdam', 'rotterdam', 'the hague', 'utrecht', 'eindhoven'
+    ]
+  },
+  {
+    name: 'Singapore',
+    patterns: [
+      'singapore', 'sg'
+    ]
+  },
+  {
+    name: 'Brazil',
+    patterns: [
+      'brazil', 'brasil', 'br',
+      'sao paulo', 'são paulo', 'rio de janeiro', 'brasilia', 'salvador', 'fortaleza', 'belo horizonte', 'curitiba', 'porto alegre'
+    ]
+  },
+  {
+    name: 'Russia',
+    patterns: [
+      'russia', 'ru',
+      'moscow', 'saint petersburg', 'novosibirsk', 'yekaterinburg', 'nizhny novgorod'
+    ]
+  },
+  {
+    name: 'China',
+    patterns: [
+      'china', 'cn',
+      'beijing', 'shanghai', 'shenzhen', 'guangzhou', 'hangzhou', 'chengdu', 'wuhan', 'nanjing', 'xi\'an'
+    ]
+  },
+  {
+    name: 'South Africa',
+    patterns: [
+      'south africa', 'za',
+      'johannesburg', 'cape town', 'durban', 'pretoria'
+    ]
+  },
+  {
+    name: 'New Zealand',
+    patterns: [
+      'new zealand', 'nz',
+      'auckland', 'wellington', 'christchurch'
+    ]
+  },
+  {
+    name: 'Switzerland',
+    patterns: [
+      'switzerland', 'ch',
+      'zurich', 'zürich', 'geneva', 'basel', 'bern', 'lausanne'
+    ]
+  },
+  {
+    name: 'Sweden',
+    patterns: [
+      'sweden', 'se',
+      'stockholm', 'gothenburg', 'malmö'
+    ]
+  },
+  {
+    name: 'Spain',
+    patterns: [
+      'spain', 'españa', 'es',
+      'madrid', 'barcelona', 'valencia', 'seville', 'sevilla', 'zaragoza', 'malaga', 'málaga'
+    ]
+  },
+  {
+    name: 'Italy',
+    patterns: [
+      'italy', 'italia', 'it',
+      'rome', 'roma', 'milan', 'milano', 'naples', 'napoli', 'turin', 'torino', 'palermo', 'florence', 'firenze', 'bologna'
+    ]
+  },
+  {
+    name: 'Ukraine',
+    patterns: [
+      'ukraine', 'ua',
+      'kyiv', 'kiev', 'kharkiv', 'lviv', 'odesa', 'dnipro'
+    ]
+  },
+  {
+    name: 'Poland',
+    patterns: [
+      'poland', 'pl',
+      'warsaw', 'warszawa', 'krakow', 'kraków', 'wroclaw', 'wrocław', 'gdansk', 'gdańsk', 'poznan', 'poznań'
+    ]
+  },
+  {
+    name: 'Turkey',
+    patterns: [
+      'turkey', 'turkiye', 'türkiye', 'tr',
+      'istanbul', 'ankara', 'izmir', 'bursa', 'antalya'
+    ]
+  },
+  {
+    name: 'Indonesia',
+    patterns: [
+      'indonesia', 'id',
+      'jakarta', 'surabaya', 'bandung', 'medan', 'semarang'
+    ]
+  },
+  {
+    name: 'Vietnam',
+    patterns: [
+      'vietnam', 'vn',
+      'ho chi minh', 'hanoi', 'da nang', 'saigon'
+    ]
+  },
+  {
+    name: 'Philippines',
+    patterns: [
+      'philippines', 'ph',
+      'manila', 'quezon city', 'cebu', 'davao'
+    ]
+  },
+  {
+    name: 'Malaysia',
+    patterns: [
+      'malaysia', 'my',
+      'kuala lumpur', 'kl', 'penang', 'johor bahru'
+    ]
+  },
+  {
+    name: 'Thailand',
+    patterns: [
+      'thailand', 'th',
+      'bangkok', 'nonthaburi', 'chiang mai'
+    ]
+  },
+  {
+    name: 'South Korea',
+    patterns: [
+      'south korea', 'korea', 'kr',
+      'seoul', 'busan', 'incheon', 'daegu'
+    ]
+  },
+  {
+    name: 'Nigeria',
+    patterns: [
+      'nigeria', 'ng',
+      'lagos', 'abuja', 'ibadan', 'kano', 'portharcourt'
+    ]
+  },
+  {
+    name: 'Kenya',
+    patterns: [
+      'kenya', 'ke',
+      'nairobi', 'mombasa'
+    ]
+  },
+  {
+    name: 'Egypt',
+    patterns: [
+      'egypt', 'eg',
+      'cairo', 'alexandria', 'giza'
+    ]
+  },
+  {
+    name: 'Israel',
+    patterns: [
+      'israel', 'il',
+      'tel aviv', 'jerusalem', 'haifa', 'beer sheva'
+    ]
+  },
+  {
+    name: 'Mexico',
+    patterns: [
+      'mexico', 'mx',
+      'mexico city', 'guadalajara', 'monterrey', 'puebla', 'tijuana'
+    ]
+  },
+  {
+    name: 'Argentina',
+    patterns: [
+      'argentina', 'ar',
+      'buenos aires', 'cordoba', 'córdoba', 'rosario'
+    ]
+  },
+  {
+    name: 'Colombia',
+    patterns: [
+      'colombia', 'co',
+      'bogota', 'bogotá', 'medellin', 'medellín', 'cali'
+    ]
+  },
+  {
+    name: 'Ireland',
+    patterns: [
+      'ireland', 'ie',
+      'dublin', 'cork', 'galway', 'limerick'
+    ]
+  },
+  {
+    name: 'Austria',
+    patterns: [
+      'austria', 'at',
+      'vienna', 'wien', 'salzburg', 'graz', 'linz'
+    ]
+  },
+  {
+    name: 'Belgium',
+    patterns: [
+      'belgium', 'be',
+      'brussels', 'antwerp', 'ghent', 'bruges', 'liege'
+    ]
+  },
+  {
+    name: 'Denmark',
+    patterns: [
+      'denmark', 'dk',
+      'copenhagen', 'aarhus', 'odense'
+    ]
+  },
+  {
+    name: 'Finland',
+    patterns: [
+      'finland', 'fi',
+      'helsinki', 'espoo', 'tampere', 'vantaa', 'oulu'
+    ]
+  },
+  {
+    name: 'Norway',
+    patterns: [
+      'norway', 'no',
+      'oslo', 'bergen', 'trondheim', 'stavanger'
+    ]
+  },
+  {
+    name: 'Portugal',
+    patterns: [
+      'portugal', 'pt',
+      'lisbon', 'lisboa', 'porto'
+    ]
+  },
+  {
+    name: 'Romania',
+    patterns: [
+      'romania', 'ro',
+      'bucharest', 'bucuresti', 'cluj', 'timisoara', 'iasi'
+    ]
+  },
+  {
+    name: 'United Arab Emirates',
+    patterns: [
+      'united arab emirates', 'uae', 'ae',
+      'dubai', 'abu dhabi', 'sharjah'
+    ]
+  },
+  {
+    name: 'Saudi Arabia',
+    patterns: [
+      'saudi arabia', 'sa',
+      'riyadh', 'jeddah', 'mecca', 'medina', 'dammam'
+    ]
+  }
+];
+
+/**
+ * Parses location string and resolves clean country name. Defaults to India.
+ */
 function extractCountry(location) {
   if (!location) return 'India';
-  const loc = location.toLowerCase().trim();
+  const locLower = location.toLowerCase().trim();
 
-  if (loc.includes('india') || loc.includes(', in') || loc === 'in' || loc.includes('bharat')) return 'India';
-  if (loc.includes('united states') || loc.includes('usa') || loc.includes(', us') || loc === 'us') return 'United States';
-  if (loc.includes('united kingdom') || loc.includes('uk') || loc === 'uk' || loc.includes('london')) return 'United Kingdom';
-  if (loc.includes('canada') || loc === 'ca') return 'Canada';
-  if (loc.includes('australia') || loc === 'au') return 'Australia';
-  if (loc.includes('germany') || loc === 'de') return 'Germany';
-  if (loc.includes('singapore') || loc === 'sg') return 'Singapore';
+  // 1. Direct checks on the entire lowercase location string first
+  if (locLower === 'india' || locLower === 'in' || locLower === 'ind' || locLower === 'bharat') return 'India';
+  if (locLower === 'united states' || locLower === 'usa' || locLower === 'us' || locLower === 'united states of america') return 'United States';
+  if (locLower === 'united kingdom' || locLower === 'uk' || locLower === 'great britain' || locLower === 'england') return 'United Kingdom';
+  if (locLower === 'canada') return 'Canada';
+  if (locLower === 'australia') return 'Australia';
+  if (locLower === 'germany') return 'Germany';
+  if (locLower === 'singapore') return 'Singapore';
 
-  const parts = location.split(',');
+  // 2. Tokenize by separators (comma, semicolon, slash)
+  const parts = locLower.split(/[,;/]+/).map(p => p.trim()).filter(Boolean);
+
+  // 3. Search for matching keywords in each part exactly
+  for (const part of parts) {
+    if (part === 'india' || part === 'in' || part === 'ind' || part === 'bharat') return 'India';
+    if (part === 'united states' || part === 'usa' || part === 'us' || part === 'united states of america') return 'United States';
+    if (part === 'united kingdom' || part === 'uk' || part === 'england' || part === 'great britain') return 'United Kingdom';
+    if (part === 'canada') return 'Canada';
+    if (part === 'australia') return 'Australia';
+    if (part === 'germany' || part === 'deutschland') return 'Germany';
+    if (part === 'singapore') return 'Singapore';
+  }
+
+  // 4. Search for cities/states in the patterns list
+  // Check exact matches in the pre-defined patterns lists
+  for (const part of parts) {
+    for (const item of countryLookup) {
+      if (item.patterns.includes(part)) {
+        return item.name;
+      }
+    }
+  }
+
+  // 5. Check US state codes if any part is exactly a US state code
+  for (const part of parts) {
+    const usItem = countryLookup.find(c => c.name === 'United States');
+    if (usItem && usItem.stateCodes && usItem.stateCodes.includes(part)) {
+      return 'United States';
+    }
+  }
+
+  // 6. Fallback checks: if the full string contains one of the major countries or patterns
+  for (const item of countryLookup) {
+    for (const pattern of item.patterns) {
+      // Avoid matching short strings (<= 3 chars) to prevent false positives
+      if (pattern.length > 3 && locLower.includes(pattern)) {
+        return item.name;
+      }
+    }
+  }
+
+  // 7. Last resort: if there's a comma, check the last part
   if (parts.length > 1) {
-    const candidate = parts[parts.length - 1].trim();
-    if (candidate.length > 2) return candidate;
+    const lastPart = parts[parts.length - 1];
+    const cleanLastPart = lastPart.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    
+    const lowerLast = lastPart.toLowerCase();
+    const isIndianState = countryLookup.find(c => c.name === 'India').patterns.includes(lowerLast);
+    if (isIndianState) return 'India';
+    
+    const isUSState = countryLookup.find(c => c.name === 'United States').patterns.includes(lowerLast);
+    if (isUSState) return 'United States';
+
+    if (lastPart.length > 2) {
+      return cleanLastPart;
+    }
   }
 
   return 'India';

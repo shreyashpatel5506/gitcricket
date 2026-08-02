@@ -124,7 +124,6 @@ Starring the repo shows your support and gives your Pull Request a **much higher
 - Fork the repository.
 - Create a new branch (e.g., \`location/${countryLower.replace(/\s+/g, '-')}\`).
 - Make changes in \`features/scanner/utils/transformer.js\`.
-- Run \`npm run build\` locally to verify that there are no compilation errors.
 - Submit your Pull Request and reference this issue!`;
 
     const createUrl = `https://api.github.com/repos/${REPO}/issues`;

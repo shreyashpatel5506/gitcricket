@@ -19,7 +19,11 @@ const RESERVED_ROUTES = [
   'sitemap.xml',
   'public',
   'images',
-  'assets'
+  'assets',
+  'about',
+  'contact',
+  'privacy',
+  'terms'
 ];
 
 /**

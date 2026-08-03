@@ -8,6 +8,10 @@ export default async function sitemap() {
     '',
     '/leagues',
     '/dashboard',
+    '/about',
+    '/contact',
+    '/privacy',
+    '/terms',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),

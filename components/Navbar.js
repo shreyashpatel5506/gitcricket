@@ -68,13 +68,13 @@ export default function Navbar() {
           <Link href="/leagues" className="text-sm font-medium text-text-secondary hover:text-green-core transition-colors">
             Leagues
           </Link>
-          <a href="#explainers" className="text-sm font-medium text-text-secondary hover:text-green-core transition-colors">
+          <Link href="/#explainers" className="text-sm font-medium text-text-secondary hover:text-green-core transition-colors">
             How it Works
-          </a>
-          <a href="#explainers" className="text-sm font-medium text-text-secondary hover:text-green-core transition-colors flex items-center gap-1.5">
+          </Link>
+          <Link href="/#explainers" className="text-sm font-medium text-text-secondary hover:text-green-core transition-colors flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-green-core" />
             Modes & Criteria
-          </a>
+          </Link>
         </nav>
 
         {/* Right: Auth Action Buttons */}

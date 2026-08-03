@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import PlayerCard from '@/components/PlayerCard';
 import { createClient } from '@/lib/supabase/client';
 import { 
@@ -218,6 +219,7 @@ export default function DashboardContent({ profile, ownCard, savedCards, searchH
 
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

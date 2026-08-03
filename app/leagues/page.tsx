@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import LoginModal from '@/components/LoginModal';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -441,6 +442,7 @@ export default function LeaguesPage() {
           </div>
         </div>
       )}
+      <Footer />
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 

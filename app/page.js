@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import SearchBox from '@/components/SearchBox';
 import PreviewCard from '@/components/PreviewCard';
 import { 
@@ -289,14 +290,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border-hairline bg-bg-surface-1/40 py-12 text-center text-xs text-text-tertiary">
-        <div className="mx-auto max-w-7xl px-6 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <p>© {new Date().getFullYear()} GitCric. All rights reserved.</p>
-          <p className="flex items-center gap-1.5">
-            Data parsed securely from public GitHub GraphQL endpoints.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

@@ -123,7 +123,7 @@ export default function PrivacyPage() {
                 <h2 className="text-lg font-bold uppercase tracking-wider">4. Data Deletion & User Choice</h2>
               </div>
               <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-                You have full control over your card information. If you wish to delete your cached player records, saved bookmarks, or account details from GitCric, please send an email to <a href="mailto:support@gitcric.me" className="text-green-core hover:underline">support@gitcric.me</a> with your GitHub username. We will wipe all associated cache history databases from our records within 24 hours.
+                You have full control over your card information. If you wish to delete your cached player records, saved bookmarks, or account details from GitCric, please send an email to <a href="mailto:shreyashpatel5506@gmail.com" className="text-green-core hover:underline">shreyashpatel5506@gmail.com</a> with your GitHub username. We will wipe all associated cache history databases from our records within 24 hours.
               </p>
             </div>
 

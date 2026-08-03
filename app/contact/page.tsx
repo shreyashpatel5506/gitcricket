@@ -32,12 +32,21 @@ export default function ContactPage() {
     setError('');
 
     try {
-      // Mock API call to simulate contact form ingestion
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      setSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        setSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setError(result.error || 'Failed to send message. Please try again.');
+      }
     } catch (err) {
-      setError('Failed to send message. Please try again.');
+      setError('Connection error. Please check your network or try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -74,8 +83,8 @@ export default function ContactPage() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <h3 className="text-sm font-bold uppercase tracking-wider">Email Address</h3>
-                  <a href="mailto:support@gitcric.me" className="text-xs text-text-secondary hover:text-green-core transition-colors">
-                    support@gitcric.me
+                  <a href="mailto:shreyashpatel5506@gmail.com" className="text-xs text-text-secondary hover:text-green-core transition-colors">
+                    shreyashpatel5506@gmail.com
                   </a>
                   <span className="text-[10px] text-text-tertiary mt-0.5">Average reply time: 24-48 hours.</span>
                 </div>

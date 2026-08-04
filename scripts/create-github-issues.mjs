@@ -138,7 +138,7 @@ Starring the repo shows your support and gives your Pull Request a **much higher
       body: JSON.stringify({
         title,
         body,
-        labels: ['good first issue', 'help wanted', 'location-mapping']
+        labels: ['good first issue', 'help wanted', 'location-mapping','upforgrabs']
       })
     });
 

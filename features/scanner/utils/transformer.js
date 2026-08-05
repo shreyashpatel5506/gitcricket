@@ -292,7 +292,10 @@ const countryLookup = [
     name: 'Spain',
     patterns: [
       'spain', 'españa', 'es',
-      'madrid', 'barcelona', 'valencia', 'seville', 'sevilla', 'zaragoza', 'malaga', 'málaga'
+      'madrid', 'barcelona', 'valencia', 'seville', 'sevilla', 'zaragoza', 'malaga', 'málaga',
+      'bilbao', 'alicante', 'murcia', 'palma', 'las palmas', 'cordoba', 'córdoba',
+      'valladolid', 'vigo', 'gijon', 'gijón', 'granada', 'san sebastian', 'san sebastián',
+      'catalonia', 'cataluña', 'andalucia', 'andalucía', 'galicia', 'basque country', 'país vasco'
     ]
   },
   {

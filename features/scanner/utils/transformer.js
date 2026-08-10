@@ -290,21 +290,19 @@ const countryLookup = [
   },
   {
     name: 'Spain',
-   patterns: [
--      'spain', 'españa', 'es',
--      'madrid', 'barcelona', 'valencia', 'seville', 'sevilla', 'zaragoza', 'malaga', 'málaga'
-+      'spain', 'españa', 'es',
-+      'madrid', 'barcelona', 'valencia', 'seville', 'sevilla', 'zaragoza', 'malaga', 'málaga',
-+      'bilbao', 'alicante', 'murcia', 'palma', 'las palmas', 'cordoba', 'córdoba',
-+      'valladolid', 'vigo', 'gijon', 'gijón', 'granada', 'san sebastian', 'san sebastián',
-+      'catalonia', 'cataluña', 'andalucia', 'andalucía', 'galicia', 'basque country', 'país vasco',
-+      'oviedo', 'santander', 'salamanca', 'toledo', 'burgos', 'logroño', 'logrono', 'la rioja',
-+      'pontevedra', 'ourense', 'orense', 'almeria', 'almería', 'jaen', 'jaén', 'huelva',
-+      'tenerife', 'gran canaria', 'las palmas de gran canaria', 'canary islands', 'islas canarias',
-+      'ibiza', 'eivissa', 'menorca', 'minorca', 'formentera', 'mallorca', 'palma de mallorca',
-+      'asturias', 'cantabria', 'extremadura', 'navarra', 'comunidad valenciana', 'valencian community',
-+      'lleida', 'lerida', 'tarragona', 'ceuta', 'melilla', 'soria', 'cuenca', 'segovia', 'ávila', 'avila'
-     ]
+    patterns: [
+      'spain', 'españa', 'es',
+      'madrid', 'barcelona', 'valencia', 'seville', 'sevilla', 'zaragoza', 'malaga', 'málaga',
+      'bilbao', 'alicante', 'murcia', 'palma', 'las palmas', 'cordoba', 'córdoba',
+      'valladolid', 'vigo', 'gijon', 'gijón', 'granada', 'san sebastian', 'san sebastián',
+      'catalonia', 'cataluña', 'andalucia', 'andalucía', 'galicia', 'basque country', 'país vasco',
+      'oviedo', 'santander', 'salamanca', 'toledo', 'burgos', 'logroño', 'logrono', 'la rioja',
+      'pontevedra', 'ourense', 'orense', 'almeria', 'almería', 'jaen', 'jaén', 'huelva',
+      'tenerife', 'gran canaria', 'las palmas de gran canaria', 'canary islands', 'islas canarias',
+      'ibiza', 'eivissa', 'menorca', 'minorca', 'formentera', 'mallorca', 'palma de mallorca',
+      'asturias', 'cantabria', 'extremadura', 'navarra', 'comunidad valenciana', 'valencian community',
+      'lleida', 'lerida', 'tarragona', 'ceuta', 'melilla', 'soria', 'cuenca', 'segovia', 'ávila', 'avila'
+    ]
   },
   {
     name: 'Italy',

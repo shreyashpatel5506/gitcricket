@@ -209,7 +209,9 @@ const countryLookup = [
     name: 'Nepal',
     patterns: [
       'nepal', 'np',
-      'kathmandu', 'pokhara', 'lalitpur', 'biratnagar', 'dharan'
+      'kathmandu', 'pokhara', 'lalitpur', 'biratnagar', 'dharan',
+      'bharatpur', 'birgunj', 'butwal', 'hetauda', 'janakpur', 'janakpurdham',
+      'nepalgunj', 'nepalganj', 'itahari', 'dhangadhi', 'dhangadi', 'patan'
     ]
   },
   {

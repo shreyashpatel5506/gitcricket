@@ -218,7 +218,9 @@ const countryLookup = [
     name: 'France',
     patterns: [
       'france', 'fr',
-      'paris', 'marseille', 'lyon', 'toulouse', 'nice', 'nantes', 'strasbourg', 'montpellier', 'bordeaux', 'lille'
+      'paris', 'marseille', 'lyon', 'toulouse', 'nice', 'nantes', 'strasbourg', 'montpellier', 'bordeaux', 'lille',
+      'rennes', 'grenoble', 'toulon', 'dijon', 'reims', 'le havre', 'saint-etienne', 'saint-étienne', 'angers',
+      'ile-de-france', 'île-de-france', 'provence', 'occitanie', 'bretagne', 'brittany', 'normandie', 'normandy', 'nouvelle-aquitaine'
     ]
   },
   {

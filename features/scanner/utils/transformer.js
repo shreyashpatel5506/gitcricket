@@ -76,7 +76,7 @@ function calculateStreaks(weeks) {
 function aggregateLanguages(repoNodes) {
   const languageSizes = {};
 
-  if (repoNodes && repoNodes.length > 0) {
+if (repoNodes) {
     repoNodes.forEach(repo => {
       const edges = repo.languages?.edges || [];
       edges.forEach(edge => {

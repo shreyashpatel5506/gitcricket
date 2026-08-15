@@ -13,120 +13,152 @@ export default function CricketAnimation() {
 
   useEffect(() => {
     let active = true;
+    const timeoutIds = new Set();
+    const pendingResolves = new Set();
+
+    const scheduleTimeout = (callback, delay) => {
+      const timeoutId = setTimeout(() => {
+        timeoutIds.delete(timeoutId);
+        callback();
+      }, delay);
+      timeoutIds.add(timeoutId);
+      return timeoutId;
+    };
+
+    const wait = (delay) =>
+      new Promise((resolve) => {
+        pendingResolves.add(resolve);
+        scheduleTimeout(() => {
+          pendingResolves.delete(resolve);
+          resolve();
+        }, delay);
+      });
 
     const runSequence = async () => {
-      while (active) {
-        // Reset states
-        setShowSparks(false);
-        textControls.set({ opacity: 0, scale: 0.5, y: 0 });
-        
-        // Position ball at start (relative to the collision point at 45% left, 55% top)
-        ballControls.set({ x: '35vw', y: '-35vh', scale: 0.4, opacity: 1 });
-        
-        // Position bat at start (cocked back to the left / behind)
-        batControls.set({ rotate: -60, opacity: 1 });
+      if (!active) return;
 
-        // Randomly choose a shot trajectory:
-        // 0 = Six Right, 1 = Six Left, 2 = Four Right, 3 = Four Left
-        const shotType = Math.floor(Math.random() * 4);
-        const isSix = shotType === 0 || shotType === 1;
-        const currentLabel = isSix ? 'six' : 'four';
-        
-        cycleRef.current = currentLabel;
-        setCycle(currentLabel);
+      // Reset states
+      setShowSparks(false);
+      textControls.set({ opacity: 0, scale: 0.5, y: 0 });
+      
+      // Position ball at start (relative to the collision point at 45% left, 55% top)
+      ballControls.set({ x: '35vw', y: '-35vh', scale: 0.4, opacity: 1 });
+      
+      // Position bat at start (cocked back to the left / behind)
+      batControls.set({ rotate: -60, opacity: 1 });
 
-        // 1. Bowler delivers: ball travels down to the static collision point (0, 0)
-        await Promise.all([
-          ballControls.start({
-            x: 0,
-            y: 0,
-            scale: 0.9,
-            transition: { duration: 1.1, ease: 'easeIn' }
-          }),
-          // Bat swings forward (left to right) to meet the ball
-          new Promise((resolve) => setTimeout(resolve, 750)).then(() => {
-            if (active) {
-              batControls.start({
-                rotate: 15,
-                transition: { duration: 0.35, ease: 'easeOut' }
-              });
-            }
-          })
-        ]);
+      // Randomly choose a shot trajectory:
+      // 0 = Six Right, 1 = Six Left, 2 = Four Right, 3 = Four Left
+      const shotType = Math.floor(Math.random() * 4);
+      const isSix = shotType === 0 || shotType === 1;
+      const currentLabel = isSix ? 'six' : 'four';
+      
+      cycleRef.current = currentLabel;
+      setCycle(currentLabel);
 
-        if (!active) break;
+      // 1. Bowler delivers: ball travels down to the static collision point (0, 0)
+      await Promise.all([
+        ballControls.start({
+          x: 0,
+          y: 0,
+          scale: 0.9,
+          transition: { duration: 1.1, ease: 'easeIn' }
+        }),
+        // Bat swings forward (left to right) to meet the ball
+        wait(750).then(() => {
+          if (active) {
+            batControls.start({
+              rotate: 15,
+              transition: { duration: 0.35, ease: 'easeOut' }
+            });
+          }
+        })
+      ]);
 
-        // 2. Impact point reached
-        setShowSparks(true);
-        
-        // Trigger "SIX!" or "FOUR!" text pop-up
-        textControls.start({
-          opacity: [0, 1, 1, 0],
-          scale: [0.6, 1.3, 1.3, 1],
-          y: -80,
-          transition: { duration: 1.0, ease: 'easeOut' }
-        });
+      if (!active) return;
 
-        // 3. Ball flies off based on the randomized shot selection
-        let targetX = '45vw';
-        let targetY = '-65vh';
-        let scaleKeyframes = [0.9, 1.8, 1.2, 0.4];
+      // 2. Impact point reached
+      setShowSparks(true);
+      
+      // Trigger "SIX!" or "FOUR!" text pop-up
+      textControls.start({
+        opacity: [0, 1, 1, 0],
+        scale: [0.6, 1.3, 1.3, 1],
+        y: -80,
+        transition: { duration: 1.0, ease: 'easeOut' }
+      });
 
-        if (shotType === 0) {
-          // Six Right (High)
-          targetX = '45vw';
-          targetY = '-65vh';
-        } else if (shotType === 1) {
-          // Six Left (High)
-          targetX = '-45vw';
-          targetY = '-65vh';
-        } else if (shotType === 2) {
-          // Four Right (Low)
-          targetX = '45vw';
-          targetY = '15vh';
-          scaleKeyframes = [0.9, 0.7, 0.6, 0.3];
-        } else {
-          // Four Left (Low)
-          targetX = '-45vw';
-          targetY = '20vh';
-          scaleKeyframes = [0.9, 0.7, 0.6, 0.3];
-        }
+      // 3. Ball flies off based on the randomized shot selection
+      let targetX = '45vw';
+      let targetY = '-65vh';
+      let scaleKeyframes = [0.9, 1.8, 1.2, 0.4];
 
-        await Promise.all([
-          ballControls.start({
-            x: targetX,
-            y: targetY,
-            scale: scaleKeyframes,
-            opacity: [1, 1, 1, 0],
-            transition: { duration: 0.9, ease: 'easeOut' }
-          }),
-          batControls.start({
-            rotate: 80,
-            transition: { duration: 0.35, ease: 'easeOut' }
-          })
-        ]);
+      if (shotType === 0) {
+        // Six Right (High)
+        targetX = '45vw';
+        targetY = '-65vh';
+      } else if (shotType === 1) {
+        // Six Left (High)
+        targetX = '-45vw';
+        targetY = '-65vh';
+      } else if (shotType === 2) {
+        // Four Right (Low)
+        targetX = '45vw';
+        targetY = '15vh';
+        scaleKeyframes = [0.9, 0.7, 0.6, 0.3];
+      } else {
+        // Four Left (Low)
+        targetX = '-45vw';
+        targetY = '20vh';
+        scaleKeyframes = [0.9, 0.7, 0.6, 0.3];
+      }
 
-        if (!active) break;
+      await Promise.all([
+        ballControls.start({
+          x: targetX,
+          y: targetY,
+          scale: scaleKeyframes,
+          opacity: [1, 1, 1, 0],
+          transition: { duration: 0.9, ease: 'easeOut' }
+        }),
+        batControls.start({
+          rotate: 80,
+          transition: { duration: 0.35, ease: 'easeOut' }
+        })
+      ]);
 
-        // Fade elements out quickly for fast loop reset
-        await Promise.all([
-          batControls.start({ opacity: 0, transition: { duration: 0.3 } }),
-          ballControls.start({ opacity: 0, transition: { duration: 0.3 } })
-        ]);
+      if (!active) return;
 
-        // Reduced rest time to 1.5 seconds so animation stays active and visible
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Fade elements out quickly for fast loop reset
+      await Promise.all([
+        batControls.start({ opacity: 0, transition: { duration: 0.3 } }),
+        ballControls.start({ opacity: 0, transition: { duration: 0.3 } })
+      ]);
+
+      if (!active) return;
+
+      // Reduced rest time to 1.5 seconds so animation stays active and visible
+      await wait(1500);
+
+      if (active) {
+        runSequence();
       }
     };
 
     // Begin sequence after initial render delay
-    const startDelay = setTimeout(() => {
+    scheduleTimeout(() => {
       runSequence();
     }, 800);
 
     return () => {
       active = false;
-      clearTimeout(startDelay);
+      timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
+      timeoutIds.clear();
+      pendingResolves.forEach((resolve) => resolve());
+      pendingResolves.clear();
+      ballControls.stop();
+      batControls.stop();
+      textControls.stop();
     };
   }, []);
 

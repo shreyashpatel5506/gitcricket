@@ -396,7 +396,9 @@ const countryLookup = [
     name: 'Egypt',
     patterns: [
       'egypt', 'eg',
-      'cairo', 'alexandria', 'giza'
+      'cairo', 'alexandria', 'giza',
+      'aswan', 'luxor', 'port said', 'suez', 'mansoura',
+      'tanta', 'zagazig', 'ismailia', 'faiyum', 'minya'
     ]
   },
   {

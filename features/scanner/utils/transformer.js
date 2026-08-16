@@ -154,27 +154,8 @@ const countryLookup = [
   {
     name: 'United Kingdom',
     patterns: [
-      'united kingdom',
-      'uk',
-      'great britain',
-      'britain',
-      'england',
-      'scotland',
-      'wales',
-      'northern ireland',
-      'london',
-      'manchester',
-      'birmingham',
-      'liverpool',
-      'leeds',
-      'glasgow',
-      'edinburgh',
-      'bristol',
-      'sheffield',
-      'newcastle',
-      'nottingham',
-      'cardiff',
-      'belfast'
+      'united kingdom', 'uk', 'great britain','britain','england','scotland','wales','northern ireland','london','manchester','birmingham',
+      'liverpool','leeds','glasgow','edinburgh','bristol','sheffield','newcastle','nottingham','cardiff','belfast'
     ]
   },
   {

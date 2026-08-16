@@ -388,7 +388,10 @@ const countryLookup = [
     name: 'Kenya',
     patterns: [
       'kenya', 'ke',
-      'nairobi', 'mombasa'
+      'nairobi', 'mombasa',
+      'kisumu', 'nakuru', 'eldoret', 'thika', 'malindi',
+      'kitale', 'nyeri', 'machakos', 'lamu', 'garissa',
+      'kakamega', 'meru', 'kilifi', 'naivasha', 'kericho'
     ]
   },
   {

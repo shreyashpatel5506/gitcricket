@@ -367,7 +367,12 @@ const countryLookup = [
     name: 'Thailand',
     patterns: [
       'thailand', 'th',
-      'bangkok', 'nonthaburi', 'chiang mai'
+      'bangkok', 'nonthaburi', 'chiang mai', 'chiang rai',
+      'phuket', 'pattaya', 'samut prakan', 'pathum thani',
+      'khon kaen', 'nakhon ratchasima', 'udon thani', 'rayong',
+      'surat thani', 'nakhon si thammarat', 'hat yai',
+      'songkhla', 'sukhothai', 'buriram', 'sisaket', 'roiet',
+      'ubon ratchathani', 'lamphun', 'nakhon nayok'
     ]
   },
   {
